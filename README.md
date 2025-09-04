@@ -1,3 +1,8 @@
+<center>
+<h3>NOTE: Development is now focused on <a href="https://codeberg.org/Yonle/bostr2">bostr2</a></h3>
+<p>The current development is now focused on bostr2. Future PR submission will be only accepted on bostr2. This repo will be merged with bostr2, deprecating the nodejs version.</p>
+</center>
+
 # Bostr
 A nostr relay bouncer.
 
