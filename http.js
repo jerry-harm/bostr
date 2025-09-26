@@ -31,10 +31,18 @@ config.server_meta.limitation = {
 
 if (!config.relays?.length) (async () => {
   console.log("Load balancer mode. Fetching relays list from", config.loadbalancer[0].replace(/^ws/, "http"));
+  // 构建代理选项
+  const agentOptions = {};
+  if (config.socks_proxy.enabled) {
+    const proxyUrl = `socks://${config.socks_proxy.username ? `${config.socks_proxy.username}:${config.socks_proxy.password}@` : ''}${config.socks_proxy.host}:${config.socks_proxy.port}`;
+    agentOptions.agent = new SocksProxyAgent(proxyUrl);
+  }
+  
   const request = await undici.request(config.loadbalancer[0].replace(/^ws/, "http"), {
     headers: {
       "User-Agent": config.user_agent
-    }
+    },
+    ...agentOptions
   });
 
   const text = await request.body.text();

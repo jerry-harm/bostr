@@ -6,8 +6,9 @@ const { version } = require("./package.json");
 const WebSocket = require("ws");
 const { validateEvent, nip19, matchFilters, mergeFilters, getFilterLimit } = require("nostr-tools");
 const nip42 = require("./nip42.js");
+const { SocksProxyAgent } = require('socks-proxy-agent');
 
-let { relays, log_about_relays, server_meta, private_keys, reconnect_time, wait_eose, pause_on_limit, max_eose_score, upstream_ratelimit_expiration, max_client_subs, idle_sessions, cache_relays, loadbalancer, max_known_events, user_agent } = require(process.env.BOSTR_CONFIG_PATH || "./config");
+let { relays, log_about_relays, server_meta, private_keys, reconnect_time, wait_eose, pause_on_limit, max_eose_score, upstream_ratelimit_expiration, max_client_subs, idle_sessions, cache_relays, loadbalancer, max_known_events, user_agent, socks_proxy  } = require(process.env.BOSTR_CONFIG_PATH || "./config");
 
 log_about_relays = process.env.LOG_ABOUT_RELAYS || log_about_relays;
 loadbalancer = loadbalancer || [];
@@ -290,11 +291,19 @@ function relay_type(addr) {
 class Session extends WebSocket {
   constructor(addr, id, reconn_t = 0) {
     if (!stats[addr]) stats[addr] = { raw_rx: 0, rx: 0, tx: 0, f: 0 };
-    super(addr, {
+    
+    const wsOptions = {
       headers: {
         "User-Agent": user_agent,
       }
-    });
+    };
+    
+    if (socks_proxy.enabled) {
+      const proxyUrl = `socks5h://${socks_proxy.username ? `${socks_proxy.username}:${socks_proxy.password}@` : ''}${socks_proxy.host}:${socks_proxy.port}`;
+      wsOptions.agent = new SocksProxyAgent(proxyUrl);
+    }
+
+    super(addr, wsOptions);
 
     this.id = id;
     this.addr = addr;
@@ -484,3 +493,4 @@ function receiverOnUnexpectedResponse(req, res) {
 for (let i = 1; i <= (idle_sessions || 1); i++) {
   newsess();
 }
+
