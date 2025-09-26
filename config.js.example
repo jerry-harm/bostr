@@ -201,8 +201,8 @@ module.exports = {
   ],
 
   // User agent to use on upstream connection.
-  user_agent: "Bostr (https://codeberg.org/Yonle/bostr) on wss://bostr.example.com - A nostr relay proxy aggregator"
-,
+  user_agent: "Bostr (https://codeberg.org/Yonle/bostr) on wss://bostr.example.com - A nostr relay proxy aggregator",
+
   socks_proxy: {
     enabled: false,         
     host: 'localhost', 
@@ -210,4 +210,11 @@ module.exports = {
     username: '', 
     password: ''
   },
+
+   no_proxy: [
+    'localhost',
+    '127.0.0.1',
+    '192.168.*',
+    '10.*',
+   ],
 }
