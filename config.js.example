@@ -202,7 +202,7 @@ module.exports = {
 
   // User agent to use on upstream connection.
   user_agent: "Bostr (https://codeberg.org/Yonle/bostr) on wss://bostr.example.com - A nostr relay proxy aggregator"
-
+,
   socks_proxy: {
     enabled: false,         
     host: 'localhost', 
