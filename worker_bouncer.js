@@ -305,8 +305,7 @@ class Session extends WebSocket {
       }
     };
     
-    const useProxy = socks_proxy.enabled && 
-                   !isNoProxy(host, socks_proxy.no_proxy || config.no_proxy);
+    const useProxy = socks_proxy.enabled && !isNoProxy(host, no_proxy);
     
     if (useProxy) {
       const proxyUrl = `socks5h://${socks_proxy.username ? `${socks_proxy.username}:${socks_proxy.password}@` : ''}${socks_proxy.host}:${socks_proxy.port}`;
